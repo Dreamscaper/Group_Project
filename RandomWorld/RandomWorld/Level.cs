@@ -12,7 +12,7 @@ using SpriteSpace;
 
 namespace RandomWorld
 {
-    class Level : Structure
+    class Level
     {
         public const int MAX_TILES_X = 20; //The maximum amount of blocks on the X axis
         public const int MAX_TILES_Y = 12; //The maximum amount of blocks on the X axis
@@ -23,8 +23,7 @@ namespace RandomWorld
             public int start_X;
             public int start_Y;
 
-            public bool isValid;
-
+            public bool stopGoing;
         }
 
         public struct Room
@@ -67,13 +66,16 @@ namespace RandomWorld
         public int[,] newArray = new int[MAX_TILES_X, MAX_TILES_Y];
         public int[,] hallArray = new int[MAX_TILES_X, MAX_TILES_Y];
 
+        private List<int> Mid_List_X = new List<int>();
+        private List<int> Mid_List_Y = new List<int>();
+
         public Level()
         {
             room_NULL.isNULL = true;
             newRoom = new Room();
             newRoom._room = new int[MAX_TILES_X, MAX_TILES_Y];
         }
-        public override void Draw(SpriteBatch spriteBatch, GameTime gameTime)
+        public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
             
             for (int b = 0; b < MAX_TILES_X; b++)
@@ -89,7 +91,7 @@ namespace RandomWorld
                 
             }
         }
-        public override void Load(ContentManager content)
+        public void Load(ContentManager content)
         {
 
             numofRooms = rand.Next(4, 6);
@@ -101,7 +103,6 @@ namespace RandomWorld
             while (finishedRooms < numofRooms)
             {
                 ClearArray(newArray);
-                ClearArray(roomList);
                 new_start_X = rand.Next(0, MAX_TILES_X);
                 new_start_Y = rand.Next(0, MAX_TILES_Y);
                 new_Size_X = rand.Next(3, 6);
@@ -111,14 +112,14 @@ namespace RandomWorld
                 if (isValid)
                 {
                     ClearArray(newRoom._room);
-                    for(int i = 0; i < MAX_TILES_X; i++)
+                    for (int i = 0; i < MAX_TILES_X; i++)
                     {
                         for (int j = 0; j < MAX_TILES_Y; j++)
                         {
-                            newRoom._room[i,j] = newArray[i,j];
+                            newRoom._room[i, j] = newArray[i, j];
                         }
                     }
-                    
+
                     newRoom.start_X = new_start_X;
                     newRoom.start_Y = new_start_Y;
                     newRoom.Size_X = new_Size_X;
@@ -127,76 +128,15 @@ namespace RandomWorld
                     newRoom.Y_Mid = new_start_Y + (newRoom.Size_Y / 2);
                     newRoom.isNULL = false;
 
-                    for (int i = 0; i < numofRooms; i++)
+                    Mid_List_X.Add(newRoom.X_Mid);
+                    Mid_List_Y.Add(newRoom.Y_Mid);
+
+
+                    Room room = roomList[finishedRooms];
+
+                    if (room.isNULL)
                     {
-                        Room room = roomList[i];
-
-                        if (room.isNULL)
-                        {
-                            room = newRoom;
-                        }
-
-                            if (!room.isNULL)
-                            {
-
-                                room.Hall1.start_X = room.X_Mid;
-                                room.Hall1.start_Y = room.start_Y;
-
-                                room.Hall2.start_X = room.X_Mid;
-                                room.Hall2.start_Y = room.start_Y + room.Size_Y;
-
-                                room.Hall3.start_X = room.start_X;
-                                room.Hall3.start_Y = room.Y_Mid;
-
-                                room.Hall4.start_X = room.start_X + room.Size_X;
-                                room.Hall4.start_Y = room.Y_Mid;
-
-                                for (int k = 0; k < MAX_TILES_X; k++)
-                                {
-                                    for (int m = 0; m < MAX_TILES_Y + 1; m++)
-                                    {
-                                        if (room.Hall1.start_Y - m >= 0)
-                                        {
-                                            hallArray[room.Hall1.start_X, room.Hall1.start_Y - m] = 1;
-                                        }
-                                        else
-                                        {
-                                            //If hallArray != 0, stop because it intersected another thing
-                                        }
-
-                                        if (room.Hall2.start_Y + m < MAX_TILES_Y)
-                                        {
-                                            hallArray[room.Hall2.start_X, room.Hall2.start_Y + m] = 1;
-                                        }
-                                        else
-                                        {
-                                            //Intersection
-                                        }
-
-                                        if (room.Hall3.start_X - k >= 0)
-                                        {
-                                            hallArray[room.Hall3.start_X - k, room.Hall3.start_Y] = 1;
-                                        }
-                                        else
-                                        {
-                                            //If hallArray != 0, stop because it intersected another thing
-                                        }
-
-                                        if (room.Hall4.start_X + k < MAX_TILES_X)
-                                        {
-                                            hallArray[room.Hall4.start_X + k, room.Hall4.start_Y] = 1;
-                                        }
-                                        else
-                                        {
-                                            //Intersection
-                                        }
-
-                                    }
-                                }
-
-                            }
-
-                        
+                        roomList[finishedRooms] = newRoom;
                     }
                     SetGameBoard(newRoom, GameBoard, content);
                     finishedRooms++;
@@ -212,6 +152,73 @@ namespace RandomWorld
                     }
                 }
             }
+                for (int i = 0; i < numofRooms; i++)
+                {
+                    Room room = roomList[i];
+                    Console.WriteLine("I got here");
+                    room.Hall1.start_X = room.X_Mid;
+                    room.Hall1.start_Y = room.start_Y;
+                    room.Hall1.stopGoing = false;
+
+                    room.Hall2.start_X = room.X_Mid;
+                    room.Hall2.start_Y = room.start_Y + room.Size_Y;
+                    room.Hall2.stopGoing = false;
+
+                    room.Hall3.start_X = room.start_X;
+                    room.Hall3.start_Y = room.Y_Mid;
+                    room.Hall3.stopGoing = false;
+
+                    room.Hall4.start_X = room.start_X + room.Size_X;
+                    room.Hall4.start_Y = room.Y_Mid;
+                    room.Hall4.stopGoing = false;
+
+                    for (int k = 0; k < MAX_TILES_X; k++)
+                    {
+                        for (int m = 0; m < MAX_TILES_Y; m++)
+                        {
+                            if (room.Hall1.start_Y - m >= 0 && !room.Hall1.stopGoing)
+                            {
+                                if (GameBoard[room.Hall1.start_X, room.Hall1.start_Y - m] != null)
+                                {
+                                    room.Hall1.stopGoing = true;
+                                }
+                                hallArray[room.Hall1.start_X, room.Hall1.start_Y - m] = 1;
+                                SetHalls(content);
+                            }
+
+                            if (room.Hall2.start_Y + m < MAX_TILES_Y && !room.Hall2.stopGoing)
+                            {
+                                if (GameBoard[room.Hall2.start_X, room.Hall2.start_Y + m] != null)
+                                {
+                                    room.Hall2.stopGoing = true;
+                                }
+                                hallArray[room.Hall2.start_X, room.Hall2.start_Y + m] = 1;
+                                SetHalls(content);
+                            }
+                        }
+                            if (room.Hall3.start_X - k >= 0 && !room.Hall3.stopGoing)
+                            {
+                                if (GameBoard[room.Hall3.start_X - k, room.Hall3.start_Y] != null)
+                                {
+                                    room.Hall3.stopGoing = true;
+                                } 
+                                hallArray[room.Hall3.start_X - k, room.Hall3.start_Y] = 1;
+                                SetHalls(content);
+                            }
+
+                            if (room.Hall4.start_X + k < MAX_TILES_X && !room.Hall4.stopGoing)
+                            {
+                                if (GameBoard[room.Hall4.start_X + k, room.Hall4.start_Y] != null)
+                                {
+                                   room.Hall4.stopGoing = true;
+                                } 
+                                hallArray[room.Hall4.start_X + k, room.Hall4.start_Y] = 1;
+                                SetHalls(content);
+                            }
+                        
+                    }
+
+                }
 
             SetHalls(content);
         }
@@ -222,13 +229,13 @@ namespace RandomWorld
             ClearArray(roomList);
             ClearArray(hallArray);
         }
-        public override void Update(GameTime gameTime)
+        public void Update(GameTime gameTime)
         {
 
         }
  
 
-        public override bool CheckLocation(int size_x, int size_y, int start_pos_X, int start_pos_Y, int[,] array, Sprite[,] gameboard)
+        public bool CheckLocation(int size_x, int size_y, int start_pos_X, int start_pos_Y, int[,] array, Sprite[,] gameboard)
         {
             if (start_pos_X > 0 && start_pos_X + size_x < MAX_TILES_X && start_pos_Y > 0 && start_pos_Y + size_y < MAX_TILES_Y)
             {
@@ -285,7 +292,7 @@ namespace RandomWorld
                 }
             }
         }
-        public void SetGameBoard(Room room, Sprite[,] gameBoard, ContentManager content)
+        private void SetGameBoard(Room room, Sprite[,] gameBoard, ContentManager content)
         {
             for (int x = room.start_X; x < (room.Size_X + room.start_X); x++)
             {
@@ -295,7 +302,6 @@ namespace RandomWorld
                     {
                         tiles = new Sprite("FloorTiles", content);
                         GameBoard[x, y] = tiles;
-                        Console.WriteLine("Room at " + x + "," + y);
                         GameBoard[x, y].Position.X = (SPRITE_SIZE * x);
                         GameBoard[x, y].Position.Y = (SPRITE_SIZE * y);
                     }
@@ -318,7 +324,6 @@ namespace RandomWorld
                         {
                             tiles = new Sprite("FloorTiles", content);
                             GameBoard[j, k] = tiles;
-                            Console.WriteLine("Hall at " + j + "," + k);
                             GameBoard[j, k].Position.X = (SPRITE_SIZE * j);
                             GameBoard[j, k].Position.Y = (SPRITE_SIZE * k);
                         }
