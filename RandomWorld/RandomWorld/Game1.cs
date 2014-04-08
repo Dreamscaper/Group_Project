@@ -17,7 +17,7 @@ namespace RandomWorld
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        Level Level1;
+        Level Level;
         Player Player;
         bool change = false;
 
@@ -25,7 +25,7 @@ namespace RandomWorld
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-            Level1 = new Level();
+            Level = new Level();
             Player = new Player();
         }
 
@@ -38,8 +38,9 @@ namespace RandomWorld
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            Level1.Load(Content);
-            Player.Load(Content);
+            
+            Level.Load(Content);
+            Player.Load(Content, Level);
         }
 
         protected override void UnloadContent()
@@ -56,8 +57,9 @@ namespace RandomWorld
             //Click to reload the room
             if (Mouse.GetState().LeftButton == ButtonState.Pressed && change == false)
             {
-                Level1.reLoad();
-                Level1.Load(Content);
+                Level.reLoad();
+                Level.Load(Content);
+                Player.Load(Content, Level);
                 change = true;
             }
             if (Mouse.GetState().LeftButton == ButtonState.Released)
@@ -72,7 +74,7 @@ namespace RandomWorld
         {
             GraphicsDevice.Clear(Color.Black);
             spriteBatch.Begin();
-            Level1.Draw(spriteBatch, gameTime);
+            Level.Draw(spriteBatch, gameTime);
             Player.Draw(spriteBatch, gameTime);
             spriteBatch.End();
             base.Draw(gameTime);

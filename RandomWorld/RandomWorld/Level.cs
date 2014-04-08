@@ -47,28 +47,28 @@ namespace RandomWorld
             public bool isNULL; //A value to make the rooms pseudo-nullable
         }
       
-        Room newRoom;
-        Room room_NULL = new Room();
-        Random rand = new Random();
+        private Room newRoom;
+        private Room room_NULL = new Room();
+        private Random rand = new Random();
 
         //Each index in GameBoard can be thought of as a 40x40 pixel area on the screen. 
         //This array will be populated based on the location of 1's in each room's array.
         Sprite[,] GameBoard = new Sprite[MAX_TILES_X, MAX_TILES_Y];
-        int numofRooms;
+        public int numofRooms { get; private set; }
         int finishedRooms = 0;
 
-        Room[] roomList;
+        public Room[] roomList { get; private set; }
         Sprite tiles;
         
         bool isValid;
 
-        public int new_Size_X;
-        public int new_Size_Y;
-        public int new_start_X;
-        public int new_start_Y;
-        public int loadingTimer = 0;
-        public int[,] newArray = new int[MAX_TILES_X, MAX_TILES_Y]; //These will be populated based upon the individual room's locations
-        public int[,] hallArray = new int[MAX_TILES_X, MAX_TILES_Y];
+        private int new_Size_X;
+        private int new_Size_Y;
+        private int new_start_X;
+        private int new_start_Y;
+        private int loadingTimer = 0;
+        private int[,] newArray = new int[MAX_TILES_X, MAX_TILES_Y]; //These will be populated based upon the individual room's locations
+        private int[,] hallArray = new int[MAX_TILES_X, MAX_TILES_Y];
 
         private List<int> Mid_List_X = new List<int>();
         private List<int> Mid_List_Y = new List<int>();
