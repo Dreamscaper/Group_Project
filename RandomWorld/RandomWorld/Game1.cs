@@ -18,6 +18,9 @@ namespace RandomWorld
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         Level Level1;
+
+        bool change = false;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -47,9 +50,18 @@ namespace RandomWorld
          
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
-            //Following two lines used for testing
-            //Level1.reLoad();
-            //Level1.Load(Content);
+            //Following lines used for testing - temporary
+            //Click to reload the room
+            if (Mouse.GetState().LeftButton == ButtonState.Pressed && change == false)
+            {
+                Level1.reLoad();
+                Level1.Load(Content);
+                change = true;
+            }
+            if (Mouse.GetState().LeftButton == ButtonState.Released)
+            {
+                change = false;
+            }
             base.Update(gameTime);
         }
 
