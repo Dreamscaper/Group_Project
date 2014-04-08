@@ -1,10 +1,6 @@
 ﻿//AG-131
 //Student: Wesley Couturier
 
-//Code not modified yet
-
-
-/*
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,45 +12,46 @@ using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
+using SpriteSpace;
 
-namespace GameCode
+namespace RandomWorld
 {   
-    class Movement
+    static class PlayerMovement
     {
-        MouseState cMouse;
-        MouseState pMouse;
+        static MouseState cMouse;
+        static MouseState pMouse;
 
-        KeyboardState cKeyBoard;
-        KeyboardState pKeyBoard;
+        static KeyboardState cKeyBoard;
+        static KeyboardState pKeyBoard;
 
-        Vector2 FontPos;
-        Vector2 lStickPos;
-        Vector2 rStickPos;
+        static Vector2 FontPos;
+        static Vector2 lStickPos;
+        static Vector2 rStickPos;
 
-        GamePadState cController1;
-        GamePadState pController1;
+        static GamePadState cController1;
+        static GamePadState pController1;
 
-        GamePadState cController2;
-        GamePadState pController2;
+        static GamePadState cController2;
+        static GamePadState pController2;
 
-        GamePadState cController3;
-        GamePadState pController3;
+        static GamePadState cController3;
+        static GamePadState pController3;
 
-        GamePadState cController4;
-        GamePadState pController4;
+        static GamePadState cController4;
+        static GamePadState pController4;
 
-        double direction;
+        static double direction;
 
-        float pSpeed = 5f; //This is the player speed, Can be set something of your liking
+        static float pSpeed = 3f; //This is the player speed, Can be set something of your liking
 
-        public void Load()
+        public static void Load()
         { 
             FontPos = new Vector2(0, 0);
             lStickPos = new Vector2(0, 15);
             rStickPos = new Vector2(15, 30);
         }
 
-        public void Update(GameTime gameTime, Tank player, string OP)       //Tank is be the object you wish to move, just rename "Tank", OP is "OutPut" 
+        public static void Update(GameTime gameTime, Player player, string OP)       //Player is be the object you wish to move, just rename "Player", OP is "OutPut" 
         {
             /////////////////GamePad Code////////////////////////////////////////////////////////////
             cController1 = GamePad.GetState(PlayerIndex.One);
@@ -98,7 +95,7 @@ namespace GameCode
                 pMouse = cMouse;
             }
 
-           // myMouse.setLocation(cMouse.X, cMouse.Y);            
+           // myMouse.setPosition(cMouse.X, cMouse.Y);            
 
             // Set every previous to current
             pMouse = cMouse;
@@ -112,13 +109,13 @@ namespace GameCode
 
         }
 
-        public double convertDtoR(double n)
+        public static double convertDtoR(double n)
         {
             n = n * (Math.PI / 180);
             return n;
         }
 
-        public void checkGamePad(PlayerIndex index, Tank P, GamePadState current, GamePadState previous, string output) //Tank "P" is for the player
+        public static void checkGamePad(PlayerIndex index, Player P, GamePadState current, GamePadState previous, string output) //Player "P" is for the player
         {
             bool active = current.IsConnected;
             float playerSpeed = pSpeed;
@@ -217,23 +214,24 @@ namespace GameCode
                     P.Position.X += current.ThumbSticks.Left.X * pSpeed;
                     P.Position.Y -= current.ThumbSticks.Left.Y * pSpeed;
                  
-                    //Console.Out.WriteLine("P.Location.Y : " + P.tankBody.Location.Y);
+                    //Console.Out.WriteLine("P.Position.Y : " + P._Icon.Position.Y);
                 }
 
                 if (current.ThumbSticks.Left.Length() >= 0.3f)
                 {
-                    P.BodyFacing = (float)Math.Atan2(-current.ThumbSticks.Left.Y, current.ThumbSticks.Left.X);
+                    //This needs modification too
+                    //P.BodyFacing = (float)Math.Atan2(-current.ThumbSticks.Left.Y, current.ThumbSticks.Left.X);
                 }
 
                 if (current.ThumbSticks.Right.Length() >= 0.3f)
                 {
-                    //rStick = "Right ThumbStick: ( " + current.ThumbSticks.Right.X + ", " + current.ThumbSticks.Right.Y + " )";
-                    P.tankBarrel.rotation = (float)Math.Atan2(-current.ThumbSticks.Right.Y, current.ThumbSticks.Right.X);
+                    //Modify as-needed
+                    P.Rotation = (float)((180/Math.PI) * Math.Atan2(-current.ThumbSticks.Right.Y, current.ThumbSticks.Right.X));
                 }
             }
         }
 
-        public void keyDown(KeyboardState cKeyBoard, Tank tankSprite)
+        public static void keyDown(KeyboardState cKeyBoard, Player PlayerSprite)
         {
             //NOTE/////////////////////////////////
             //  degree assignments are in tune with the cartesian system starting on the 'Y'
@@ -242,74 +240,72 @@ namespace GameCode
             if (cKeyBoard.IsKeyDown(Keys.W))
             {
                 direction = convertDtoR(270);               //Converts initial degree to Radians
-                tankSprite.tankBody.rotation = (float)direction;
+                PlayerSprite.Rotation = (float)direction;
 
-                tankSprite.tankBody.Location.Y -= 5;
+                PlayerSprite.Position.Y -= pSpeed;
             }
 
             if (cKeyBoard.IsKeyDown(Keys.A))
             {
                 direction = convertDtoR(180);
-                tankSprite.tankBody.rotation = (float)direction;
+                PlayerSprite.Rotation = (float)direction;
 
-                tankSprite.tankBody.Location.X -= 5;
+                PlayerSprite.Position.X -= pSpeed;
             }
 
             if (cKeyBoard.IsKeyDown(Keys.S))
             {
                 direction = convertDtoR(90);
-                tankSprite.tankBody.rotation = (float)direction;
+                PlayerSprite.Rotation = (float)direction;
 
-                tankSprite.tankBody.Location.Y += 5;
+                PlayerSprite.Position.Y += pSpeed;
             }
 
             if (cKeyBoard.IsKeyDown(Keys.D))
             {
                 direction = convertDtoR(0);
-                tankSprite.tankBody.rotation = (float)direction;
+                PlayerSprite.Rotation = (float)direction;
 
-                tankSprite.tankBody.Location.X += 5;
+                PlayerSprite.Position.X += pSpeed;
             }
 
             if (cKeyBoard.IsKeyDown(Keys.W) && cKeyBoard.IsKeyDown(Keys.D))
             {
                 direction = convertDtoR(315);
-                tankSprite.tankBody.rotation = (float)direction;
-
-                tankSprite.tankBody.Location.Y -= 0.25f;
-                tankSprite.tankBody.Location.X += 1.75f;
+                PlayerSprite.Rotation = (float)direction;
+                //Trying to get this to work. (It won't do division because they're floats) But the numbers can't be hard-coded
+                PlayerSprite.Position.Y -= pSpeed / 16;
+                PlayerSprite.Position.X += pSpeed / 16;
             }
 
             if (cKeyBoard.IsKeyDown(Keys.W) && cKeyBoard.IsKeyDown(Keys.A))
             {
                 direction = convertDtoR(225);
-                tankSprite.tankBody.rotation = (float)direction;
+                PlayerSprite.Rotation = (float)direction;
 
-                tankSprite.tankBody.Location.Y -= 0.25f;
-                tankSprite.tankBody.Location.X -= 1.75f;
+                PlayerSprite.Position.Y -= pSpeed / 16;
+                PlayerSprite.Position.X -= pSpeed / 16;
             }
 
             if (cKeyBoard.IsKeyDown(Keys.S) && cKeyBoard.IsKeyDown(Keys.A))
             {
                 direction = convertDtoR(135);
-                tankSprite.tankBody.rotation = (float)direction;
+                PlayerSprite.Rotation = (float)direction;
 
-                tankSprite.tankBody.Location.Y -= 0.25f;
-                tankSprite.tankBody.Location.X -= 1.75f;
+                PlayerSprite.Position.Y -= pSpeed / 16;
+                PlayerSprite.Position.X -= pSpeed / 16;
             }
 
             if (cKeyBoard.IsKeyDown(Keys.S) && cKeyBoard.IsKeyDown(Keys.D))
             {
                 direction = convertDtoR(45);
-                tankSprite.tankBody.rotation = (float)direction;
+                PlayerSprite.Rotation = (float)direction;
 
-                tankSprite.tankBody.Location.Y -= 0.25f;
-                tankSprite.tankBody.Location.X -= 1.75f;
+                PlayerSprite.Position.Y -= pSpeed / 16;
+                PlayerSprite.Position.X += pSpeed / 16;
             }
         }
 
 
     }
 }
-
-*/

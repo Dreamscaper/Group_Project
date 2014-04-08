@@ -156,7 +156,7 @@ namespace RandomWorld
                     //If it's impossible for the rooms to fit in the boundaries this will be infinite and cause the game to crash
                     //As the boundaries get bigger in proportion to the number of rooms and their size, this will be called less, as there's a creater chance to fit everything on the screen the first time. 
                     loadingTimer++;
-                    if (loadingTimer >= 5)
+                    if (loadingTimer >= 15)
                     {
                         reLoad();
                         finishedRooms = 0;

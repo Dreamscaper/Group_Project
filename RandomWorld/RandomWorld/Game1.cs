@@ -18,7 +18,7 @@ namespace RandomWorld
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         Level Level1;
-
+        Player Player;
         bool change = false;
 
         public Game1()
@@ -26,6 +26,7 @@ namespace RandomWorld
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             Level1 = new Level();
+            Player = new Player();
         }
 
         protected override void Initialize()
@@ -38,6 +39,7 @@ namespace RandomWorld
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
             Level1.Load(Content);
+            Player.Load(Content);
         }
 
         protected override void UnloadContent()
@@ -62,6 +64,7 @@ namespace RandomWorld
             {
                 change = false;
             }
+            Player.Update(gameTime);
             base.Update(gameTime);
         }
 
@@ -70,6 +73,7 @@ namespace RandomWorld
             GraphicsDevice.Clear(Color.Black);
             spriteBatch.Begin();
             Level1.Draw(spriteBatch, gameTime);
+            Player.Draw(spriteBatch, gameTime);
             spriteBatch.End();
             base.Draw(gameTime);
         }

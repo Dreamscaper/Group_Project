@@ -39,3 +39,4 @@ C:\Users\Lizzie\Documents\GitHub\Group_Project\Group_Project\RandomWorld\RandomW
 C:\Users\Lizzie\Documents\GitHub\Group_Project\Group_Project\RandomWorld\RandomWorld\obj\x86\Debug\Microsoft.Xna.Framework.RuntimeProfile.txt
 C:\Users\Lizzie\Documents\GitHub\Group_Project\Group_Project\RandomWorld\RandomWorld\obj\x86\Debug\RandomWorld.exe
 C:\Users\Lizzie\Documents\GitHub\Group_Project\Group_Project\RandomWorld\RandomWorld\obj\x86\Debug\RandomWorld.pdb
+C:\Users\Lizzie\Documents\GitHub\Group_Project\Group_Project\RandomWorld\RandomWorld\bin\x86\Debug\Content\temp.xnb

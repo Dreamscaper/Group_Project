@@ -11,7 +11,7 @@ using Microsoft.Xna.Framework.Media;
 
 //Collision needs work
 
-namespace Engine
+namespace RandomWorld
 {
     abstract class Actor
     {
